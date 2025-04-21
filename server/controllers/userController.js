@@ -77,7 +77,7 @@ export const purchaseCourse = async(req,res)=>{
         const newPurchase = await Purchase.create(purchaseData)
 
         //Stripe gateway Initialized
-        const stripeInstance = new Stripe(process.env.STRIPE_SECRET_KEY)
+        const stripeInstance = new Stripe(process.env.STRIPE_SECRET_KEY);
         const currency = process.env.CURRENCY.toLowerCase()
 
         //Creating line items to for stripe
@@ -98,7 +98,7 @@ export const purchaseCourse = async(req,res)=>{
             line_items:line_items,
             mode: 'payment',
             metadata:{
-                purchaseI:newPurchase._id.toString()
+                purchaseId:newPurchase._id.toString()
             }
         })
 
