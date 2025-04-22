@@ -2,21 +2,56 @@ import React, { useContext,useEffect ,useState } from 'react'
 import { AppContext } from '../../context/AppContext'
 import { assets, dummyDashboardData } from '../../assets/assets'
 import Loading from '../../components/student/Loading'
+import axios from 'axios'
+import { toast } from 'react-toastify'
+import 'react-toastify/dist/ReactToastify.css';
+import { ToastContainer } from 'react-toastify';
+
+
 
 const Dashboard = () => {
 
-  const {currency}=useContext(AppContext)
+  const {currency,backendUrl,isEducator, getToken}=useContext(AppContext)
   const [dashboardData,setDashboardData]=useState(null)
 
-  const fetchDashboardData=async() => {
-    setDashboardData(dummyDashboardData)
-  }
+  const fetchDashboardData = async () => {
+    try {
+      const token = await getToken();
+      console.log("Token:", token);  // Check if token is correct
+      
+      const { data } = await axios.get(backendUrl + '/api/educator/dashboard', {
+        headers: { Authorization: `Bearer ${token}` }
+      });
+      
+      console.log("Dashboard Data:", data);  // Check what data is being returned
+  
+      if (data.success) {
+        setDashboardData(data.dashboarddata);
+      } else {
+        toast.error(data.message);
+      }
+    } catch (error) {
+      toast.error(error.message);
+      console.error("Error fetching dashboard data:", error);  // Log the error
+    }
+  };
+  
+  
 
-  useEffect(() => {
-    fetchDashboardData()
-  }, [])
+ useEffect(() => {
+  console.log("isEducator:", isEducator); 
+     if(isEducator){
+      fetchDashboardData()
+     }
+  }, [isEducator])
+   
+   {/*useEffect(() => {
+    setDashboardData(dummyDashboardData);
+  }, []);*/}
+  
 
-  return dashboardData ? (
+
+  return dashboardData && dashboardData.enrolledStudentsData ? (
     <div className='min-h-screen flex flex-col items-start justify-between gap-8 md:p-8 md:pb-0 p-4 pt-8 pb-0'>
     <div className='space-y-5'>
       <div className='flex flex-wrap gap-5 items-center'>
@@ -77,4 +112,4 @@ const Dashboard = () => {
   ) : <Loading />
 }
 
-export default Dashboard
+export default Dashboard 

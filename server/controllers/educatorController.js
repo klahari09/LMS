@@ -2,6 +2,7 @@ import {clerkClient} from '@clerk/express'
 import Course from '../models/Course.js'
 import {v2 as cloudinary} from 'cloudinary'
 import { Purchase } from '../models/Purchase.js'
+import User from '../models/User.js'
 
 //update roll to educator
 export const updateRoleToEducator = async (req,res)=>{
@@ -88,7 +89,7 @@ export const educatorDashboardData = async (req,res)=>{
                 });
             });
         }
-        res.json({success: true, dashboarddata:{
+        res.json({success: true, dashboardData:{
             totalEarnings, enrolledStudentsData, totalCourses
         }})
     } catch (error) {
