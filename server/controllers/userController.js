@@ -171,7 +171,7 @@ export const addUserRating = async(req,res)=>{
 
             const existingRatingIndex = course.courseRatings.findIndex(r=>r.userId === userId)
 
-            if(existingRating> -1){
+            if(existingRatingIndex> -1){
                 course.courseRatings[existingRatingIndex].rating = rating;
             }else{
                 course.courseRatings.push({userId,rating});
